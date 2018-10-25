@@ -34,6 +34,7 @@ public class Hangman {
 
         //Checking if the letter/word is correct
 
+
 //        int indexOfTheGuess = targetWord.indexOf(theGuess);
 //        if(indexOfTheGuess != -1){
 //            System.out.println("Letter exists " + targetWord.charAt(indexOfTheGuess) + indexOfTheGuess);
