@@ -1,45 +1,22 @@
 package hangman;
 
+import java.util.ArrayList;
+
 public class Checker {
-    private String theGuess, targetWord;
+    public int checker(String targetWord, String theGuess, ArrayList<String> guessed){
+        int amountToMinus = 0;
 
-    public String getTargetWord() {
-        return targetWord;
+            for(int i = 0; i < theGuess.length(); i++){
+                if(!guessed.contains(theGuess.charAt(i))) {
+                    for (int j = 0; j < targetWord.length(); j++) {
+                        if (!targetWord.contains(Character.toString(theGuess.charAt(i)))) {
+                            amountToMinus++;
+                            guessed.add(String.valueOf(theGuess.charAt(i)));
+                        }
+                    }
+                }
+            }
+
+        return amountToMinus;
     }
-
-    public String getTheGuess() {
-        return theGuess;
-    }
-
-    public void setTargetWord(String targetWord) {
-        this.targetWord = targetWord;
-    }
-
-    public void setTheGuess(String theGuess) {
-        this.theGuess = theGuess;
-    }
-
-    public void checking(){
-        char converted[] = converter(targetWord);
-        // We also have theGuess available
-
-        //finding the index of theGuess
-
-
-    }
-
-    public char[] converter(String targetWord){
-        int amountOfChars = targetWord.length();
-        char wordArray[] = new char[amountOfChars];
-        for(int i =0; i < targetWord.length(); i++){
-            wordArray[i] = targetWord.charAt(i);
-        }
-        return wordArray;
-    }
-
-    public void returnIndex(int n){
-
-    }
-
-
 }

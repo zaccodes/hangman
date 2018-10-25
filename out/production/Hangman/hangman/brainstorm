@@ -9,3 +9,14 @@
 
 4. Check the letter or word
 
+
+Some logic
+
+       if (targetWord.contains(Character.toString(theGuess.charAt(k)))) {
+
+                                            } else{
+                                                if(guessed.contains(theGuess.charAt(k))) {
+                                                    tries = tries - 1;
+                                                }
+                                            }
+                                            guessed.add(String.valueOf(theGuess.charAt(k)));

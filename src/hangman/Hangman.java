@@ -6,25 +6,25 @@ import java.lang.*;
 
 public class Hangman {
     public static void main(String[] args) {
-        //Instantiating Scanner
+        //Instantiating Scanner and checker
         Scanner input = new Scanner(System.in);
+        Checker checker = new Checker();
 
         String targetWord; // This is the word Player one choose that Player Two has to guess
         StringBuffer blankWord = new StringBuffer(); //This is going to be my underscores
         ArrayList<String> guessed = new ArrayList<>();
         String theGuess; // This is the letter or word that Player two guesses
 
-        int tries = 8; // The amount of guesses the player has
+        int tries = 8; // The amount of guesses the player has;
 
-        //Promtping Player One for their proposed word
+        //Prompting Player One for their proposed word
         System.out.println("Player One, enter a word:");
         targetWord = input.next();
         //End of Prompting
 
         //Printing the blank word, to show amount of letters of target word
-        for(int i = 0; i < targetWord.length(); i++) {
+        for(int i = 0; i < targetWord.length(); i++)
             blankWord.append("_");
-        }
         System.out.println(blankWord);
         //End of Printing Blanks
         GAME:
@@ -43,41 +43,32 @@ public class Hangman {
                     System.out.println("Game over. Player Two wins!");
                     break GAME;
                 }else{
+                    // Do some Shit
+                    for (int j = 0; j < targetWord.length(); j++) {
+                        for(int k = 0; k < theGuess.length(); k++) {
+                            if (targetWord.charAt(j) == theGuess.charAt(k)) {
+                                blankWord.setCharAt(j, theGuess.charAt(k));
+                            }else{
+                                // Work on subtracting the amount of tries
+                                tries = tries - checker.checker(targetWord, theGuess, guessed);
 
-                        if (targetWord.contains(theGuess)) {
-                            for (int j = 0; j < targetWord.length(); j++) {
-                                if (targetWord.charAt(j) == theGuess.charAt(0)) {
-                                    blankWord.setCharAt(j, theGuess.charAt(0));
-                                }
                             }
-                        } else {
-                            tries = tries - 1;
                         }
+                    }
                 }
             }
             // Then print the blank word with correct letter filled in
             System.out.println(blankWord);
-
-<<<<<<< HEAD
-
-//        int indexOfTheGuess = targetWord.indexOf(theGuess);
-//        if(indexOfTheGuess != -1){
-//            System.out.println("Letter exists " + targetWord.charAt(indexOfTheGuess) + indexOfTheGuess);
-//        }else{
-//            System.out.println("Letter doesn't exist");
-//
-//        }
-=======
             for(int k = 0; k < blankWord.length(); k++){
                 if(blankWord.indexOf("_") == -1){
                     System.out.println("Game over. Player Two wins!");
                     break GAME;
                 }
             }
-            if(tries == 0){
+            if(tries < 0){
                 System.out.println("Game over. Player One wins! The word was: " + targetWord);
-            }
+           }
         }
->>>>>>> b9082587af7db257934ee348e8bf77b2927faaf4
+
     }
 }
