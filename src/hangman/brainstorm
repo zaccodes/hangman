@@ -20,3 +20,6 @@ Some logic
                                                 }
                                             }
                                             guessed.add(String.valueOf(theGuess.charAt(k)));
+
+   //Clearing noDuplicates
+            noDuplicates.clear();

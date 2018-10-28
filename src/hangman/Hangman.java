@@ -1,92 +1,83 @@
 package hangman;
 
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashSet;
 import java.util.Scanner;
 import java.lang.*;
 
 public class Hangman {
+
+    public static Scanner input;
+
     public static void main(String[] args) {
-        //Instantiating Scanner and checker
-        Scanner input = new Scanner(System.in);
-        Checker checker = new Checker();
-
-        String targetWord; // This is the word Player one choose that Player Two has to guess
-        StringBuffer blankWord = new StringBuffer(); //This is going to be my underscores
-        ArrayList<String> guessed = new ArrayList<>();
-        ArrayList<Character> match = new ArrayList<>();
-        ArrayList<Character> noMatch = new ArrayList<>();
-        HashSet<Character> noDuplicates = new HashSet<>();
-        String theGuess; // This is the letter or word that Player two guesses
-
-        int tries = 8; // The amount of guesses the player has;
+        //Instantiating Scanner, State, Updates
+        input = new Scanner(System.in);
+        State state = new State(8);
 
         //Prompting Player One for their proposed word
-        System.out.println("Player One, enter a word:");
-        targetWord = input.next();
-        //End of Prompting
+        promptPlayerOne();
+
+        //The call to start the Game
+        start();
+    }
+
+    public static void promptPlayerOne(){
+        //Prompting Player One for their proposed word
+        Misc.promptPlayerOne();
+        String targetWord = input.next();
+        State.setTargetWord(targetWord); // Storing targetword in state
+
 
         //Printing the blank word, to show amount of letters of target word
-        for (int i = 0; i < targetWord.length(); i++)
-            blankWord.append("_");
-        System.out.println(blankWord);
-        //End of Printing Blanks
-        GAME:
-        while (tries > 0) {
+        Updates.createBlanks(targetWord);
+        Misc.printBlanks();
+    }
+
+    public static void start(){
+
+        //Declaring names for my variables and lists
+        ArrayList<String> guessed = new ArrayList<>();
+
+        GAME: // The start of the "Game"
+        while (State.getTries() > 0) {
             //Prompting Player Two to guess a letter/word
-            System.out.println("Player Two, you have " + tries + " guesses left. Enter a guess:");
-            theGuess = input.next();
-            //End of Prompting for the guess
+            Misc.promptPlayerTwo(State.getTries());
+            String theGuess = input.next();
+            State.setTheGuess(theGuess);
+
+
             if (guessed.contains(theGuess)) {
-                System.out.println("You have already guessed '" + theGuess + "'");
+                Misc.duplicateGuess(theGuess);
+                Misc.printBlanks();
             } else {
-                //Add theGuess to the Guessed list
+                //Add theGuess to the guessed list
                 guessed.add(theGuess);
                 //Not done yet can't comment exactly what it does //Have to refactor to check if its more than one letter for whole word
-                if (targetWord.equals(theGuess)) {
-                    System.out.println("Game over. Player Two wins!");
+                if (State.getTargetWord().equals(theGuess)) {
+                    Misc.victoryPlayerTwo();
                     break GAME;
                 } else {
-                    // This for-loop adds all letter that match to a list and those that don't to another list Whats needed ** theGuess, targetword
-                    for (int k = 0; k < theGuess.length(); k++) {
-                        if ( targetWord.contains(Character.toString(theGuess.charAt(k))) ) {
-                            match.add(theGuess.charAt(k));
-                        } else {
-                            noMatch.add(theGuess.charAt(k));
-                        }
-                    }
+                    Updates.updateMatches();
 
-                    // Add all letters that match to the correct position What's Needed ** targetWord, match
-                    for(int j = 0; j < targetWord.length(); j++) {
-                        for (int k = 0; k < match.size(); k++) {
-                            if (targetWord.charAt(j) == match.get(k)) {
-                                blankWord.setCharAt(j, match.get(k));
-                            }
-                        }
-                    }
+                    Updates.updateBlanks();
 
-                    // Change no match lists to a set and back to a list to remove duplicates
-                    noDuplicates.addAll(noMatch);
+                    Updates.updateReducer();
 
-                    tries = tries - noDuplicates.size();
+                    Updates.updateTries();
+
+                    Updates.resetReducer();
 
                 }
+                // Then print the blank word with correct letter(s) filled in
+                Misc.printBlanks();
 
+                //If Player Two is out of tries. Print an informative message and end game.
+                if (State.getTries() <= 0) {
+                    Misc.victoryPlayerOne();
+                }
 
-                // Then print the blank word with correct letter filled in
-                System.out.println(blankWord);
-                for (int k = 0; k < blankWord.length(); k++) {
-                    if (blankWord.indexOf("_") == -1) {
-                        System.out.println("Game over. Player Two wins!");
-                        break GAME;
-                    }
-                }
-                if (tries < 0) {
-                    System.out.println("Game over. Player One wins! The word was: " + targetWord);
-                }
+                Misc.checkBlanks();
+
             }
-
         }
     }
 }
